@@ -50,31 +50,40 @@ export interface WSClientConfigurableOptions {
 
   // Default: 'ftxcom'. Choose between ftxcom or ftxus.
   domain?: FtxDomain;
-};
+}
 
 export interface WebsocketClientOptions extends WSClientConfigurableOptions {
   pongTimeout: number;
   pingInterval: number;
   reconnectTimeout: number;
-  reconnectOnClose: boolean,
-};
+  reconnectOnClose: boolean;
+}
 
 export type GenericAPIResponse = Promise<any>;
 
-export function serializeParams(params: object = {}, strict_validation = false): string {
+export function serializeParams(
+  params: object = {},
+  strict_validation = false
+): string {
   return Object.keys(params)
     .sort()
-    .map(key => {
+    .map((key) => {
       const value = params[key];
       if (strict_validation === true && typeof value === 'undefined') {
-        throw new Error('Failed to sign API request due to undefined parameter');
+        throw new Error(
+          'Failed to sign API request due to undefined parameter'
+        );
       }
       return `${key}=${value}`;
     })
     .join('&');
-};
+}
 
-export function serializeParamPayload(isGetRequest: boolean, params?: string | object, strictParamValidation?: boolean): string | undefined {
+export function serializeParamPayload(
+  isGetRequest: boolean,
+  params?: string | object,
+  strictParamValidation?: boolean
+): string | undefined {
   if (!params) {
     return '';
   }
@@ -85,14 +94,16 @@ export function serializeParamPayload(isGetRequest: boolean, params?: string | o
     return '?' + params;
   }
   return '?' + serializeParams(params, strictParamValidation);
-};
+}
 
 export type apiNetwork = 'ftxcom' | 'ftxus';
-export const programId = 'ftxnodeapi';
-export const programId2 = 'ftxnodeapi2';
+export const programId = '';
+export const programId2 = '';
 export const programKey = 'externalReferralProgram';
 
-export function isFtxUS(clientOptions: RestClientOptions | WebsocketClientOptions) {
+export function isFtxUS(
+  clientOptions: RestClientOptions | WebsocketClientOptions
+) {
   return clientOptions.domain === 'ftxus';
 }
 
@@ -106,7 +117,7 @@ export function getRestBaseUrl(restClientOptions: RestClientOptions) {
   }
 
   return 'https://ftx.com/api';
-};
+}
 
 export function getWsUrl(options: WebsocketClientOptions): string {
   if (options.wsUrl) {
@@ -118,7 +129,7 @@ export function getWsUrl(options: WebsocketClientOptions): string {
   }
 
   return 'wss://ftx.com/ws/';
-};
+}
 
 export function isPublicEndpoint(endpoint: string): boolean {
   if (endpoint.startsWith('https')) {
@@ -131,7 +142,7 @@ export function isPublicEndpoint(endpoint: string): boolean {
     return true;
   }
   return false;
-};
+}
 
 export function parseRawWsMessage(event: MessageEvent) {
   if (typeof event === 'string') {
